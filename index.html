@@ -1,1 +1,128 @@
-hello
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		
+		<style type="text/css">
+			body{margin: 0; padding: 0; overflow: hidden;}
+			
+			.side-bar {
+				position: fixed;
+				bottom: 25px;
+				right: 25px;
+				z-index: 100;
+			}
+		</style>
+	</head>
+
+	<body>
+		<canvas id="canvas"></canvas>
+		<div class="mui-content">
+			<div class="side-bar"> 
+				<a href="#picture" class="mui-icon mui-icon-chat"></a> 
+			</div>
+			
+			<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="https://t.me/xiaohei">telegram</a>
+					</li>
+          <li class="mui-table-view-cell">
+						<a href="mailto:sqlite.vip@gmail.com">email</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#picture"><b>cancel</b></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script>
+			(function() {
+				mui.init();
+				mui('body').on('tap', '.mui-popover-action li>a', function() {
+					var a = this;
+					var parent;
+					//根据点击按钮，反推当前是哪个actionsheet
+					for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+						if (parent.classList.contains('mui-popover-action')) {
+							break;
+						}
+					}
+					//关闭actionsheet
+					mui('#' + parent.id).popover('toggle');
+					if (a.innerHTML == '在线留言') popSendMsg();
+					else if (a.href.indexOf("#") != 0) window.location.href = a.href;//window.open(a.href);
+				});
+				
+				function httpGet(url, callback) {
+					var httpRequest = new XMLHttpRequest();
+					httpRequest.open('GET', url, true);
+					httpRequest.send();
+					httpRequest.onreadystatechange = function () {
+						if (!callback) return;
+						if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+							callback(httpRequest.responseText);
+						} else {
+							callback();
+						}
+					};
+				}
+				
+				//特效
+				var canvas = document.getElementById('canvas');
+				var ctx = canvas.getContext('2d');
+					
+				canvas.height = screen.height;//window.innerHeight;
+				canvas.width = screen.width;//window.innerWidth;
+					
+				var texts = '0123456789'.split('');
+					
+				var fontSize = 16;
+				var columns = canvas.width/fontSize;
+				// 用于计算输出文字时坐标，所以长度即为列数
+				var drops = [];
+				//初始值
+				for(var x = 0; x < columns; x++){
+					drops[x] = 1;
+				}
+					
+				function draw(){
+					//让背景逐渐由透明到不透明
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+					//文字颜色
+					ctx.fillStyle = '#0F0';
+					ctx.font = fontSize + 'px arial';
+					//逐行输出文字
+					for(var i = 0; i < drops.length; i++){
+						var text = texts[Math.floor(Math.random()*texts.length)];
+						ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+					
+						if(drops[i]*fontSize > canvas.height || Math.random() > 0.95){
+							drops[i] = 0;
+						}
+					
+						drops[i]++;
+					}
+				}
+					
+				setInterval(draw, 33);
+			})();
+		</script>
+	</body>
+
+</html>
