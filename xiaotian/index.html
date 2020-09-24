@@ -30,7 +30,7 @@
 		if (t == NaN) return gotoHome();
 		if (t > v.time + 5 * 60) return gotoHome(); // 过期
 		if (t < v.time) return gotoHome(); // 分享时间错误
-		app.$data.name = v.name + '.mp4';
+		app.$data.name = v.name;
 	})();
     </script>
 </body>
