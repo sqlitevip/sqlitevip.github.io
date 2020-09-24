@@ -15,15 +15,16 @@
         <source v-bind:src="name" type="video/mp4">
     </video>
     <script>
-		(function() {
-			  var app = new Vue({el: '#app', data: {name: ''}});
-			  var s = window.location.search.substring(1); // url参数
-			  var v = base64.decode(s); // {"name":"视频名字","time":分享时间}
-			  var t = parseInt((new Date().getTime() / 1000));
-			  if (t > v.time + 5 * 60) return; // 过期
-			  if (t < v.time) return; // 分享时间错误
-			  app.$data.name = v.name;
-		})();
+	(function() {
+		var app = new Vue({el: '#app', data: {name: ''}});
+		var s = window.location.search.substring(1); // url参数
+		var s = base64.decode(s); // {"name":"视频名字","time":分享时间}
+		var v = JSON.parse(s);
+		var t = parseInt((new Date().getTime() / 1000));
+		if (t > v.time + 5 * 60) return; // 过期
+		if (t < v.time) return; // 分享时间错误
+		app.$data.name = v.name;
+	})();
     </script>
 </body>
 </html>
