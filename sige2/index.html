@@ -11,9 +11,18 @@
 	<body>
 		<script src="js/mui.js"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "https://textdb.online/123456", true);
+			xhr.onreadystatechange = function () {
+			    if (xhr.readyState == 4 && xhr.status == 200)
+			        console.log(xhr.responseText);
+			};
+			xhr.send();
+			
 		</script>
-		hello mui
+		
 	</body>
 
 </html>
